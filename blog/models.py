@@ -20,7 +20,13 @@ class Post(models.Model):
 
     def approved_comments(self):
         return self.comments.filter(approved_comment=True)
-
+    
+    def published_date_is_in_past(self):
+        """
+        :return:true if published date is in past (not future)
+        """
+        return self.published_date <= timezone.now()
+    
 
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments')
@@ -35,3 +41,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+    
+    def created_date_is_in_past(self):
+        """
+        
+        :return: true if created date is in past (not future)
+        """
+        return self.created_date <= timezone.now()
