@@ -3,6 +3,7 @@ from django.utils import timezone
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 # Create your views here.
 
 
@@ -13,6 +14,10 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    if post.published_date and not post.published_date_is_in_past():
+        print('not past date')
+        raise Http404
+    
     return render(request, 'blog/post_detail.html', {'post': post})
 
 
